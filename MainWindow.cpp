@@ -89,11 +89,17 @@ void MainWindow::onCutVideoPushButtonClicked()
 		QMessageBox::warning(this, tr("Fichier vide"), tr("Le fichier d'entrée est vide."));
 		return;
 	}
+	else if (!QFile::exists(inputFileName))
+	{
+		QMessageBox::warning(this, tr("Problème avec le fichier d'entrée"), tr("Le fichier d'entrée n'existe pas."));
+		return;
+	}
 
 	const QFileInfo inputFileInfo(inputFileName);
 	const QString folder = inputFileInfo.absolutePath() + "/" + inputFileInfo.completeBaseName() + "-cutted." + inputFileInfo.completeSuffix();
 
-	const QString outputFileName = QFileDialog::getSaveFileName(this, tr("Ouvrir le fichier vidéo"), folder, "*.mkv;;*.mp4;;*.*");
+	QString currentSuffix = "*." + inputFileInfo.completeSuffix();
+	const QString outputFileName = QFileDialog::getSaveFileName(this, tr("Ouvrir le fichier vidéo"), folder, "*.mkv;;*.mp4;;*.*", &currentSuffix);
 	if (outputFileName.isEmpty())
 	{
 		return;
