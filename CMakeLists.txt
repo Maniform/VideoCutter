@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(VideoCutter VERSION 1.1.3 LANGUAGES CXX)
+project(VideoCutter VERSION 1.1.4 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
