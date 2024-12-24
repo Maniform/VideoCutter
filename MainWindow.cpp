@@ -58,6 +58,10 @@ MainWindow::~MainWindow()
 int MainWindow::stringToSec(QString text)
 {
 	const QStringList values = text.split(":");
+	if (values.size() < 3)
+	{
+		return -1;
+	}
 	const int sec = values[0].toInt() * 3600 + values[1].toInt() * 60 + values[2].toInt();
 	return sec;
 }
