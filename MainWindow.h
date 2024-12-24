@@ -25,7 +25,6 @@ private:
 
 private slots:
     void onVideoInPushButtonClicked();
-    void onVideoOutPushButtonClicked();
     void onCutVideoPushButtonClicked();
     void onStopCutPushButtonClicked();
 

@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->setupUi(this);
 
 	ui->videoInLineEdit->setText(settings.value("VideoInLineEdit").toString());
-	ui->videoOutLineEdit->setText(settings.value("VideoOutLineEdit").toString());
 	ui->startHourSpinBox->setValue(settings.value("StartHour").toInt());
 	ui->startMinSpinBox->setValue(settings.value("StartMin").toInt());
 	ui->startSecSpinBox->setValue(settings.value("StartSec").toInt());
@@ -38,7 +37,6 @@ MainWindow::~MainWindow()
 	ffmpeg.kill();
 
 	settings.setValue("VideoInLineEdit", ui->videoInLineEdit->text());
-	settings.setValue("VideoOutLineEdit", ui->videoOutLineEdit->text());
 	settings.setValue("StartHour", ui->startHourSpinBox->value());
 	settings.setValue("StartMin", ui->startMinSpinBox->value());
 	settings.setValue("StartSec", ui->startSecSpinBox->value());
@@ -83,19 +81,25 @@ void MainWindow::onVideoInPushButtonClicked()
 	}
 }
 
-void MainWindow::onVideoOutPushButtonClicked()
-{
-	const QString folder = ui->videoOutLineEdit->text().isEmpty() ? QDir::homePath() : ui->videoOutLineEdit->text();
-	const QString fileName = QFileDialog::getSaveFileName(this, tr("Ouvrir le fichier vidéo"), folder, "*.mkv;;*.mp4;;*.*");
-	if (!fileName.isEmpty())
-	{
-		ui->videoOutLineEdit->setText(fileName);
-	}
-}
-
 void MainWindow::onCutVideoPushButtonClicked()
 {
-	if (ui->videoInLineEdit->text() == ui->videoOutLineEdit->text())
+	const QString inputFileName = ui->videoInLineEdit->text();
+	if (inputFileName.isEmpty())
+	{
+		QMessageBox::warning(this, tr("Fichier vide"), tr("Le fichier d'entrée est vide."));
+		return;
+	}
+
+	const QFileInfo inputFileInfo(inputFileName);
+	const QString folder = inputFileInfo.absolutePath() + "/" + inputFileInfo.completeBaseName() + "-cutted." + inputFileInfo.completeSuffix();
+
+	const QString outputFileName = QFileDialog::getSaveFileName(this, tr("Ouvrir le fichier vidéo"), folder, "*.mkv;;*.mp4;;*.*");
+	if (outputFileName.isEmpty())
+	{
+		return;
+	}
+
+	if (ui->videoInLineEdit->text() == outputFileName)
 	{
 		QMessageBox::warning(this, tr("Problème"), tr("Le fichier d'entrée ne peux pas être le même que le fichier de sortie !"));
 		return;
@@ -127,12 +131,12 @@ void MainWindow::onCutVideoPushButtonClicked()
 	QStringList ffmpegArguments;
 	ffmpegArguments
 	<< "-y"
-	<< "-i" << ui->videoInLineEdit->text()
+	<< "-i" << inputFileName
 	<< "-vcodec" << vcodec
 	<< "-acodec" << "copy"
 	<< startTimeCommand
 	<< "-t" << endTime
-	<< ui->videoOutLineEdit->text();
+	<< outputFileName;
 
 	ffmpeg.start(ffmpegExe, ffmpegArguments);
 	ui->progressBar->show();
