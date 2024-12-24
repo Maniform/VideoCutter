@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>470</width>
+    <width>468</width>
     <height>331</height>
    </rect>
   </property>
@@ -237,7 +237,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>470</width>
+     <width>468</width>
      <height>25</height>
     </rect>
    </property>
@@ -245,9 +245,16 @@
     <property name="title">
      <string>Options</string>
     </property>
+    <addaction name="actionSetFileSuffix"/>
+   </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
     <addaction name="actionLog"/>
    </widget>
    <addaction name="menuOptions"/>
+   <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLog">
@@ -256,6 +263,14 @@
    </property>
    <property name="text">
     <string>Log</string>
+   </property>
+  </action>
+  <action name="actionSetFileSuffix">
+   <property name="text">
+    <string>Changer suffixe</string>
+   </property>
+   <property name="toolTip">
+    <string>Changer le suffixe de base du fichier</string>
    </property>
   </action>
  </widget>
@@ -279,11 +294,11 @@
    <slot>onVideoInPushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>788</x>
-     <y>97</y>
+     <x>456</x>
+     <y>64</y>
     </hint>
     <hint type="destinationlabel">
-     <x>755</x>
+     <x>467</x>
      <y>256</y>
     </hint>
    </hints>
@@ -295,12 +310,12 @@
    <slot>onCutVideoPushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>701</x>
-     <y>459</y>
+     <x>369</x>
+     <y>258</y>
     </hint>
     <hint type="destinationlabel">
-     <x>594</x>
-     <y>497</y>
+     <x>467</x>
+     <y>330</y>
     </hint>
    </hints>
   </connection>
@@ -311,12 +326,12 @@
    <slot>onStopCutPushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>659</x>
-     <y>519</y>
+     <x>369</x>
+     <y>294</y>
     </hint>
     <hint type="destinationlabel">
-     <x>662</x>
-     <y>548</y>
+     <x>467</x>
+     <y>330</y>
     </hint>
    </hints>
   </connection>

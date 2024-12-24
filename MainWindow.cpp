@@ -3,14 +3,18 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QInputDialog>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindow)
 	, settings("Manicorp", "VideoCutter", this)
 	, videoDuration(0)
+	, fileSuffix("-cutted")
 {
 	ui->setupUi(this);
+
+	fileSuffix = settings.value("FileSuffix", fileSuffix).toString();
 
 	ui->videoInLineEdit->setText(settings.value("VideoInLineEdit").toString());
 	ui->startHourSpinBox->setValue(settings.value("StartHour").toInt());
@@ -23,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->progressBar->hide();
 	ui->stopPushButton->hide();
 
+	connect(ui->actionSetFileSuffix, &QAction::triggered, this, &MainWindow::onSetFileSuffixActionTriggered);
 	connect(&ffmpeg, &QProcess::readyReadStandardOutput, this, &MainWindow::onReadyRead);
 	connect(&ffmpeg, &QProcess::readyReadStandardError, this, &MainWindow::onReadyRead);
 	connect(&ffmpeg, &QProcess::finished, this, &MainWindow::onCutVideoProcessFinished);
@@ -30,11 +35,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+	disconnect(ui->actionSetFileSuffix, &QAction::triggered, this, &MainWindow::onSetFileSuffixActionTriggered);
 	disconnect(&ffmpeg, &QProcess::readyReadStandardOutput, this, &MainWindow::onReadyRead);
 	disconnect(&ffmpeg, &QProcess::readyReadStandardError, this, &MainWindow::onReadyRead);
 	disconnect(&ffmpeg, &QProcess::finished, this, &MainWindow::onCutVideoProcessFinished);
 
 	ffmpeg.kill();
+
+	settings.setValue("FileSuffix", fileSuffix);
 
 	settings.setValue("VideoInLineEdit", ui->videoInLineEdit->text());
 	settings.setValue("StartHour", ui->startHourSpinBox->value());
@@ -71,6 +79,21 @@ QString MainWindow::getEndTime()
 	return endTime;
 }
 
+void MainWindow::onSetFileSuffixActionTriggered()
+{
+	QInputDialog suffixDialog(this);
+	suffixDialog.setInputMode(QInputDialog::InputMode::TextInput);
+	suffixDialog.setWindowTitle(tr("Changer le suffixe"));
+	suffixDialog.setLabelText(tr("Nouveau suffixe"));
+	suffixDialog.setTextValue(fileSuffix);
+	suffixDialog.setCancelButtonText("Annuler");
+	suffixDialog.exec();
+	if (suffixDialog.result() == QInputDialog::Accepted)
+	{
+		fileSuffix = suffixDialog.textValue();
+	}
+}
+
 void MainWindow::onVideoInPushButtonClicked()
 {
 	const QString folder = ui->videoInLineEdit->text().isEmpty() ? QDir::homePath() : ui->videoInLineEdit->text();
@@ -96,7 +119,7 @@ void MainWindow::onCutVideoPushButtonClicked()
 	}
 
 	const QFileInfo inputFileInfo(inputFileName);
-	const QString folder = inputFileInfo.absolutePath() + "/" + inputFileInfo.completeBaseName() + "-cutted." + inputFileInfo.completeSuffix();
+	const QString folder = inputFileInfo.absolutePath() + "/" + inputFileInfo.completeBaseName() + fileSuffix + "." + inputFileInfo.completeSuffix();
 
 	QString currentSuffix = "*." + inputFileInfo.completeSuffix();
 	const QString outputFileName = QFileDialog::getSaveFileName(this, tr("Ouvrir le fichier vidéo"), folder, "*.mkv;;*.mp4;;*.*", &currentSuffix);

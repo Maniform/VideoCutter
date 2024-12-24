@@ -24,6 +24,8 @@ private:
     QString getEndTime();
 
 private slots:
+    void onSetFileSuffixActionTriggered();
+
     void onVideoInPushButtonClicked();
     void onCutVideoPushButtonClicked();
     void onStopCutPushButtonClicked();
@@ -37,5 +39,6 @@ private:
     QSettings settings;
     QProcess ffmpeg;
     int videoDuration;
+    QString fileSuffix;
 };
 #endif // MAINWINDOW_H
