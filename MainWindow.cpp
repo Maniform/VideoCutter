@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget* parent)
 	ui->stopPushButton->hide();
 
 	connect(ui->actionSetFileSuffix, &QAction::triggered, this, &MainWindow::onSetFileSuffixActionTriggered);
+	connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAboutActionTriggered);
 	connect(&ffmpeg, &QProcess::readyReadStandardOutput, this, &MainWindow::onReadyRead);
 	connect(&ffmpeg, &QProcess::readyReadStandardError, this, &MainWindow::onReadyRead);
 	connect(&ffmpeg, &QProcess::finished, this, &MainWindow::onCutVideoProcessFinished);
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
 	disconnect(ui->actionSetFileSuffix, &QAction::triggered, this, &MainWindow::onSetFileSuffixActionTriggered);
+	disconnect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAboutActionTriggered);
 	disconnect(&ffmpeg, &QProcess::readyReadStandardOutput, this, &MainWindow::onReadyRead);
 	disconnect(&ffmpeg, &QProcess::readyReadStandardError, this, &MainWindow::onReadyRead);
 	disconnect(&ffmpeg, &QProcess::finished, this, &MainWindow::onCutVideoProcessFinished);
@@ -96,6 +98,11 @@ void MainWindow::onSetFileSuffixActionTriggered()
 	{
 		fileSuffix = suffixDialog.textValue();
 	}
+}
+
+void MainWindow::onAboutActionTriggered()
+{
+	QMessageBox::information(this, tr("À propos..."), tr("Version : ") + VIDEOCUTTER_VERSION);
 }
 
 void MainWindow::onVideoInPushButtonClicked()

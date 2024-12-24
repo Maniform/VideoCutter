@@ -25,6 +25,7 @@ private:
 
 private slots:
     void onSetFileSuffixActionTriggered();
+    void onAboutActionTriggered();
 
     void onVideoInPushButtonClicked();
     void onCutVideoPushButtonClicked();

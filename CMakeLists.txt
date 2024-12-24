@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(VideoCutter VERSION 1.1.4 LANGUAGES CXX)
+project(VideoCutter VERSION 1.1.5 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
 
         ${WIN32_RESOURCES}
 )
+
+add_compile_definitions(VIDEOCUTTER_VERSION="${CMAKE_PROJECT_VERSION}")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     set(app_icon_resource_windows ${WIN32_RESOURCES})

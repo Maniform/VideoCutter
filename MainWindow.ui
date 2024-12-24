@@ -252,6 +252,7 @@
      <string>Aide</string>
     </property>
     <addaction name="actionLog"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuOptions"/>
    <addaction name="menuAide"/>
@@ -271,6 +272,11 @@
    </property>
    <property name="toolTip">
     <string>Changer le suffixe de base du fichier</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>Ȧ propos...</string>
    </property>
   </action>
  </widget>
